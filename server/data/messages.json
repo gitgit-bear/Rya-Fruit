@@ -1,0 +1,21 @@
+[
+  {
+    "id": "MSG-n4c4f8py-ewciatcy",
+    "createdAt": "2026-03-30T07:00:34.797Z",
+    "resolved": false,
+    "name": "rarar",
+    "phone": "123123123123123",
+    "occasion": "送禮心意",
+    "content": "123123123123123"
+  },
+  {
+    "id": "MSG-o7uiwt4q-snlycghk",
+    "createdAt": "2026-03-30T06:41:10.068Z",
+    "resolved": false,
+    "name": "????",
+    "phone": "6123 4567",
+    "email": "test@example.com",
+    "occasion": "????",
+    "content": "?????????"
+  }
+]

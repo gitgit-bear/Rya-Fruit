@@ -1,0 +1,24 @@
+{
+  "name": "Rya Peach",
+  "short_name": "Rya Peach",
+  "description": "Rya Peach 御選時令生果：每日現切生果杯、聚會果盤與冷萃果汁。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#14532d",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+[
+  {
+    "id": "ORD-79thn7ve-afw9bwl8",
+    "createdAt": "2026-03-30T06:50:57.419Z",
+    "status": "pending",
+    "customer": {
+      "name": "????",
+      "phone": "6123 4567",
+      "email": "test@example.com",
+      "occasion": "????"
+    },
+    "delivery": {
+      "date": "2026-04-01",
+      "timeSlot": "12:00-14:00",
+      "zoneId": "zone-island",
+      "zoneName": "港島（一般地區）",
+      "address": "????? 10 ?",
+      "note": "??"
+    },
+    "lines": [
+      {
+        "productId": "fresh-fruit-cup",
+        "qty": 1,
+        "productName": "御選生果杯",
+        "unitPrice": 31
+      }
+    ],
+    "total": 31,
+    "shippingFee": 0,
+    "adminNotes": []
+  },
+  {
+    "id": "ORD-6c5bqyhz-pggtowmd",
+    "createdAt": "2026-03-30T06:41:10.069Z",
+    "status": "pending",
+    "customer": {
+      "name": "????",
+      "phone": "6123 4567",
+      "email": "test@example.com",
+      "occasion": "????"
+    },
+    "delivery": {
+      "date": "2026-04-01",
+      "timeSlot": "12:00-14:00",
+      "address": "????? 10 ?",
+      "note": "??"
+    },
+    "lines": [
+      {
+        "productId": "fresh-fruit-cup",
+        "qty": 2,
+        "productName": "御選生果杯",
+        "unitPrice": 31
+      }
+    ],
+    "total": 62,
+    "adminNotes": []
+  }
+]
