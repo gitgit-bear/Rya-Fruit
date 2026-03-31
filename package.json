@@ -6,7 +6,9 @@
     "dev": "concurrently -n server,client -c blue,green \"npm run dev -w server\" \"npm run dev -w client\"",
     "build": "npm run build -w client",
     "start": "node server/index.js",
-    "cf:pages:deploy": "npm run build -w client && npx wrangler pages deploy client/dist --project-name rya-fruit-client"
+    "cf:pages:deploy": "npm run build -w client && npx wrangler pages deploy client/dist --project-name rya-fruit-client",
+    "cf:workers:deploy": "npm run build -w client && npx wrangler deploy --config client/wrangler.toml",
+    "cf:workers:deploy:api": "npm run build -w client && npx wrangler deploy --config client/wrangler.toml --var VITE_API_BASE:https://YOUR_API_DOMAIN"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
