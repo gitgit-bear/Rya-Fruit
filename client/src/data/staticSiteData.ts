@@ -11,7 +11,7 @@ export const staticProducts: Product[] = [
       "每一杯皆以當日到貨水果現切現裝，酸甜層次分明，開蓋即食。若遇產地輪替，將以同等價位之時令果物替換，確保鮮度與風味。",
     price: 31,
     compareAtPrice: 36,
-    imageUrl: "/favicon.svg",
+    imageUrl: "/fruity_auntie_pages_1_to_4_all_jpg/001_01.jpg",
     badge: "bestseller",
   },
   {
@@ -22,7 +22,7 @@ export const staticProducts: Product[] = [
     description:
       "適合派對、開幕、家庭聚餐。果物依季節編排色彩與口感，附建議擺盤與保冷提醒，讓桌面視覺與味覺同樣出色。",
     price: 240,
-    imageUrl: "/favicon.svg",
+    imageUrl: "/fruity_auntie_pages_1_to_4_all_jpg/002_02_SETOKA.jpg",
     badge: "recommended",
   },
   {
@@ -34,7 +34,7 @@ export const staticProducts: Product[] = [
       "嚴選當季果物切片，口感清冽、香氣集中；適合午茶、飯後與輕奢小聚，亦適合作為心意伴手。",
     price: 43,
     compareAtPrice: 48,
-    imageUrl: "/favicon.svg",
+    imageUrl: "/fruity_auntie_pages_1_to_4_all_jpg/003_03.jpg",
     badge: "fresh",
   },
   {
@@ -45,7 +45,7 @@ export const staticProducts: Product[] = [
     description:
       "低溫慢磨保留果香與天然酸甜，無額外添加；與生果杯同溫層配送，適合辦公室午後與運動後補水。",
     price: 43,
-    imageUrl: "/favicon.svg",
+    imageUrl: "/fruity_auntie_pages_1_to_4_all_jpg/004_04.jpg",
     badge: "popular",
   },
 ];

@@ -7,7 +7,7 @@
     "build": "npm run build -w client",
     "start": "node server/index.js",
     "cf:pages:deploy": "npm run build -w client && npx wrangler pages deploy client/dist --project-name rya-fruit-client",
-    "cf:workers:deploy": "npm run build -w client && npx wrangler deploy --config client/wrangler.toml",
+    "cf:workers:deploy": "npm run build -w client && node scripts/copy-fruity-images.mjs && npx wrangler deploy --config client/wrangler.toml",
     "cf:workers:deploy:api": "npm run build -w client && npx wrangler deploy --config client/wrangler.toml --var VITE_API_BASE:https://YOUR_API_DOMAIN"
   },
   "devDependencies": {
