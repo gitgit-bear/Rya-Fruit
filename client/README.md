@@ -1,73 +1,46 @@
-# React + TypeScript + Vite
+# Rya Fruit Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Local development
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Vite dev server proxies `/api` and `/auntie-photos` to `http://localhost:3001`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Deploy frontend to Cloudflare Pages
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project includes a Pages Function proxy at `functions/[[path]].ts`:
+
+- `/api/*` -> your backend origin
+- `/uploads/*` -> your backend origin
+- `/auntie-photos/*` -> your backend origin
+
+This keeps browser requests same-origin on Pages so session cookies continue to work.
+
+### Cloudflare Pages settings
+
+- **Framework preset**: `Vite`
+- **Build command**: `npm ci && npm run build`
+- **Build output directory**: `dist`
+- **Root directory**: `client`
+- **Environment variable**: `NODE_VERSION=20`
+
+Stable fallback if your CI still hits npm optional-deps edge cases:
+
+- Build command fallback: `npm ci --include=optional && npm run build`
+
+### Required Pages environment variable
+
+- `API_ORIGIN`: your backend base URL  
+  Example: `https://api.your-domain.com`
+
+### Why this design
+
+The current backend uses Node.js file system storage (JSON files and local uploads), so it cannot be moved to Cloudflare Workers directly without refactoring storage to services like D1/R2/KV.
+
+With this setup:
+
+1. Frontend runs on Cloudflare Pages.
+2. Existing backend can stay on any Node host.
+3. `/api` stays under the same browser origin (through Pages Function proxy), so admin login/session behavior remains stable.
