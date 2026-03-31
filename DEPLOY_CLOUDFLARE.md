@@ -39,6 +39,7 @@ Pages project configuration:
 - Build command: `npm ci && npm run build`
 - Build output directory: `dist`
 - Environment variable: `NODE_VERSION=20`
+- Do not set Deploy command in Pages Git integration
 
 Pages environment variables:
 
@@ -47,6 +48,14 @@ Pages environment variables:
 Fallback build command (only if npm optional-dependency issue appears in CI):
 
 - `npm ci --include=optional && npm run build`
+
+If your project currently has Deploy command set to `npx wrangler deploy`, remove it.
+That command is for Workers and will fail in workspace root.
+
+If you need CLI deployment, use:
+
+- `npx wrangler pages deploy dist --project-name rya-fruit-client` (run inside `client`)
+- or from repo root: `npm run cf:pages:deploy`
 
 The Pages Function in `client/functions/[[path]].ts` reads `API_ORIGIN` and proxies:
 

@@ -25,10 +25,16 @@ This keeps browser requests same-origin on Pages so session cookies continue to 
 - **Build output directory**: `dist`
 - **Root directory**: `client`
 - **Environment variable**: `NODE_VERSION=20`
+- **Deploy command**: leave empty (do not use `npx wrangler deploy`)
 
 Stable fallback if your CI still hits npm optional-deps edge cases:
 
 - Build command fallback: `npm ci --include=optional && npm run build`
+
+If you prefer CLI deploy (instead of Pages Git integration), use:
+
+- from `client`: `npx wrangler pages deploy dist --project-name rya-fruit-client`
+- from repo root: `npm run cf:pages:deploy`
 
 ### Required Pages environment variable
 
