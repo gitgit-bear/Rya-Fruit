@@ -1,7 +1,9 @@
 import type { Product } from "../types/product";
 import type { DeliveryConfig } from "../types/delivery";
+import { staticDeliveryConfig, staticProducts } from "../data/staticSiteData";
 
 const base = import.meta.env.VITE_API_BASE ?? "";
+const useStaticMode = base.trim() === "";
 
 function jsonHeaders(): HeadersInit {
   return { "Content-Type": "application/json" };
@@ -18,6 +20,7 @@ function handleError(resp: Response) {
 }
 
 export async function fetchProducts(): Promise<Product[]> {
+  if (useStaticMode) return staticProducts;
   const r = await fetch(`${base}/api/products`, { credentials: "include" });
   if (!r.ok) throw new Error("無法載入產品");
   return r.json();
@@ -26,6 +29,12 @@ export async function fetchProducts(): Promise<Product[]> {
 export type AuntieImage = { file: string; url: string };
 
 export async function fetchAuntieImages(): Promise<AuntieImage[]> {
+  if (useStaticMode) {
+    return staticProducts.map((p) => ({
+      file: `${p.id}.svg`,
+      url: p.imageUrl,
+    }));
+  }
   const r = await fetch(`${base}/api/auntie-images`, { credentials: "include" });
   if (!r.ok) throw new Error("無法載入圖片庫");
   const data = await r.json().catch(() => ({}));
@@ -33,6 +42,11 @@ export async function fetchAuntieImages(): Promise<AuntieImage[]> {
 }
 
 export async function fetchProduct(id: string): Promise<Product> {
+  if (useStaticMode) {
+    const product = staticProducts.find((p) => p.id === id);
+    if (!product) throw new Error("找不到產品");
+    return product;
+  }
   const r = await fetch(`${base}/api/products/${encodeURIComponent(id)}`, {
     credentials: "include",
   });
@@ -42,12 +56,14 @@ export async function fetchProduct(id: string): Promise<Product> {
 
 // Admin (session cookie based)
 export async function adminMe(): Promise<{ admin: boolean }> {
+  if (useStaticMode) return { admin: false };
   const r = await fetch(`${base}/api/admin/me`, { credentials: "include" });
   if (!r.ok) throw new Error("無法取得管理狀態");
   return r.json();
 }
 
 export async function adminLogin(password: string): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供後台登入功能");
   const r = await fetch(`${base}/api/admin/login`, {
     method: "POST",
     headers: jsonHeaders(),
@@ -58,6 +74,7 @@ export async function adminLogin(password: string): Promise<void> {
 }
 
 export async function adminLogout(): Promise<void> {
+  if (useStaticMode) return;
   const r = await fetch(`${base}/api/admin/logout`, {
     method: "POST",
     credentials: "include",
@@ -66,6 +83,7 @@ export async function adminLogout(): Promise<void> {
 }
 
 export async function createProduct(body: Product): Promise<Product> {
+  if (useStaticMode) throw new Error("展示站不提供商品管理功能");
   const r = await fetch(`${base}/api/products`, {
     method: "POST",
     headers: jsonHeaders(),
@@ -81,6 +99,7 @@ export async function updateProduct(
   id: string,
   body: Partial<Omit<Product, "id">>
 ): Promise<Product> {
+  if (useStaticMode) throw new Error("展示站不提供商品管理功能");
   const r = await fetch(`${base}/api/products/${encodeURIComponent(id)}`, {
     method: "PUT",
     headers: jsonHeaders(),
@@ -93,6 +112,7 @@ export async function updateProduct(
 }
 
 export async function uploadProductImage(file: File): Promise<{ url: string }> {
+  if (useStaticMode) throw new Error("展示站不提供圖片上傳功能");
   const form = new FormData();
   form.append("image", file);
 
@@ -108,6 +128,7 @@ export async function uploadProductImage(file: File): Promise<{ url: string }> {
 }
 
 export async function deleteProduct(id: string): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供商品管理功能");
   const r = await fetch(`${base}/api/products/${encodeURIComponent(id)}`, {
     method: "DELETE",
     credentials: "include",
@@ -136,6 +157,9 @@ export async function submitOrderRequest(payload: {
   delivery: OrderRequestDelivery;
   customer: OrderRequestCustomer;
 }): Promise<{ ok: true; id: string }> {
+  if (useStaticMode) {
+    return { ok: true, id: `DEMO-ORD-${Date.now()}` };
+  }
   const r = await fetch(`${base}/api/orders/request`, {
     method: "POST",
     headers: jsonHeaders(),
@@ -149,6 +173,7 @@ export async function submitOrderRequest(payload: {
 
 // -------- Public: Delivery rules --------
 export async function fetchDeliveryConfig(): Promise<DeliveryConfig> {
+  if (useStaticMode) return staticDeliveryConfig;
   const r = await fetch(`${base}/api/delivery`, { credentials: "include" });
   if (!r.ok) throw new Error("無法載入配送設定");
   return r.json();
@@ -156,12 +181,14 @@ export async function fetchDeliveryConfig(): Promise<DeliveryConfig> {
 
 // -------- Admin: Delivery rules --------
 export async function fetchAdminDeliveryConfig(): Promise<DeliveryConfig> {
+  if (useStaticMode) throw new Error("展示站不提供後台配送設定");
   const r = await fetch(`${base}/api/admin/delivery`, { credentials: "include" });
   if (!r.ok) throw new Error("無法讀取配送設定");
   return r.json();
 }
 
 export async function updateAdminDeliveryConfig(payload: DeliveryConfig): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供後台配送設定");
   const r = await fetch(`${base}/api/admin/delivery`, {
     method: "PUT",
     headers: jsonHeaders(),
@@ -180,6 +207,9 @@ export async function submitCustomerMessage(payload: {
   occasion?: string;
   message: string;
 }): Promise<{ ok: true; id: string }> {
+  if (useStaticMode) {
+    return { ok: true, id: `DEMO-MSG-${Date.now()}` };
+  }
   const r = await fetch(`${base}/api/messages/submit`, {
     method: "POST",
     headers: jsonHeaders(),
@@ -224,6 +254,7 @@ export type AdminMessage = {
 };
 
 export async function fetchAdminOrders(): Promise<AdminOrder[]> {
+  if (useStaticMode) throw new Error("展示站不提供後台訂單功能");
   const r = await fetch(`${base}/api/admin/orders`, { credentials: "include" });
   const data = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error((data as { error?: string }).error || "讀取失敗");
@@ -235,6 +266,7 @@ export async function updateAdminOrderStatus(payload: {
   status: string;
   adminNote?: string;
 }): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供後台訂單功能");
   const r = await fetch(`${base}/api/admin/orders/${encodeURIComponent(payload.id)}`, {
     method: "PUT",
     headers: jsonHeaders(),
@@ -251,6 +283,7 @@ export async function updateAdminOrderStatus(payload: {
 }
 
 export async function fetchAdminMessages(): Promise<AdminMessage[]> {
+  if (useStaticMode) throw new Error("展示站不提供後台訊息功能");
   const r = await fetch(`${base}/api/admin/messages`, { credentials: "include" });
   const data = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error((data as { error?: string }).error || "讀取失敗");
@@ -262,6 +295,7 @@ export async function updateAdminMessage(payload: {
   resolved: boolean;
   adminReply?: string;
 }): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供後台訊息功能");
   const r = await fetch(`${base}/api/admin/messages/${encodeURIComponent(payload.id)}`, {
     method: "PUT",
     headers: jsonHeaders(),
@@ -278,6 +312,7 @@ export async function updateAdminMessage(payload: {
 }
 
 export async function deleteAdminMessage(id: string): Promise<void> {
+  if (useStaticMode) throw new Error("展示站不提供後台訊息功能");
   const r = await fetch(`${base}/api/admin/messages/${encodeURIComponent(id)}`, {
     method: "DELETE",
     credentials: "include",
